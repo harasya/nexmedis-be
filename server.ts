@@ -11,8 +11,9 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 // Inisialisasi Firebase Admin
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS as string)
-
+const serviceAccount = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '/serviceAccountKey.json'), 'utf-8'),
+)
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -22,6 +23,7 @@ const db = admin.firestore()
 const app = express()
 app.use(express.json())
 app.use(cors())
+
 
 app.post('/api/createUser', async (req: Request, res: Response) => {
   const { email, password, username } = req.body
